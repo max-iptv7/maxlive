@@ -1,129 +1,365 @@
-<!DOCTYPE html>
-<html>
+<html lang="ar"><head>
+    <meta property="og:image" content="https://i.pinimg.com/originals/90/97/d6/9097d6246804fa71ada5dc43be5f14db.jpg">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>Netflixy • Accueil</title>
-  <meta name="description" content="الواجهة الرئيسية">
-  <meta property="og:image" content="https://netflixyapp.github.io/assets/img/marquee_promo_tile.png">
-  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/assets/img/icon-180.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/icon-16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icon-32.png">
-  <link rel="icon" type="image/png" sizes="180x180" href="/assets/img/icon-180.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/assets/img/icon.png">
-  <link href="assets/css/semantic.css" rel="stylesheet" type="text/css" />
-  <link href="assets/css/login.css" rel="stylesheet" type="text/css" />
-  <link href="assets/css/modal.min.css" rel="stylesheet" type="text/css" />
+    <meta property="og:type" content="website">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Player</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;display=swap" rel="stylesheet">
+    <style>
+	#channel-list li.selected {
+    background-color: #444;
+    color: white;
+    border-left: 5px solid #666;
+}
+/* Scrollbar styles for modern browsers */
+#channel-list::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+#channel-list::-webkit-scrollbar-track {
+    background: #333; /* Light pink background */
+    border-radius: 5px; /* Rounded edges */
+}
+
+#channel-list::-webkit-scrollbar-thumb {
+    background: #444; /* Darker pink for the thumb */
+    border-radius: 5px; /* Rounded edges */
+    border: 2px solid #333; /* Adds a border for contrast */
+}
+
+#channel-list::-webkit-scrollbar-thumb:hover {
+    background: #ff5f8b; /* Even darker pink on hover */
+}
+
+/* For Firefox */
+#channel-list {
+    scrollbar-color: #444 #333; /* Thumb color and track color */
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+}
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #222;
+            color: #666;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background: #333;
+        }
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #fullscreen-button {
+            position: absolute;
+            bottom: 80px;
+            right: 10px;
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1001;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+        }
+        #channel-list {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #111;
+            overflow-y: auto;
+            transition: right 0.3s;
+            z-index: 1000;
+            color: white;
+            direction: rtl;
+        }
+        #channel-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #channel-list li {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #444;
+            transition: background-color 0.3s;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            text-align: right;
+        }
+        #channel-list li:hover {
+            background-color: #444;
+        }
+        #channel-list img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            border-radius: 3px;
+        }
+        #menu-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background-color: #444;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1001;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+        }
+        #visitor-count {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #444;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            z-index: 1002;
+        }
+        @media (min-width: 768px) {
+            #container {
+                flex-direction: row;
+            }
+            #channel-list {
+                position: static;
+                right: auto;
+                height: auto;
+                width: 250px;
+            }
+            #menu-toggle {
+                display: none;
+            }
+        }
+    </style>
 </head>
-
-<body class="body">
-  <div class="container w-container">
-    <img src="assets/img/logo.png" loading="lazy" alt="" />
-    <div class="text-block-4">
-      <button id="accessNetflixBtn" class="ui positive labeled icon button">
-        <i class="sign-in icon"></i>
-        Acc&#233;der &#224; Netflix 
-      </button>
-    </div>
-    <div class="text-block">
-      <button id="accessAndroidBtn" class="ui orange labeled icon button">
-        <i class="mobile alternate icon"></i>
-        our telegram channel 
-      </button>
-    </div>
-    <div class="text-block" style="margin-top: 5px">
-      <div class="ui red basic label hidden" id="dashboardErrorText">
-      </div>
-    </div>
-    <div id="facebook-page-container" style="display: none;">
-      <div class="text-block-2">تبع كل ما هو جديد في عالم نتفلكس على الباج فيسبوك</div>
-      <div class="text-block-4-copy" style="margin-top: 20px">
-        <div class="fb-page" data-href="https://www.facebook.com/netflixytun" data-tabs="" data-width="" data-height=""
-          data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"
-          data-hide-cta="true">
-          <blockquote cite="https://www.facebook.com/netflixytun" class="fb-xfbml-parse-ignore">
-            <a href="https://www.facebook.com/netflixytun">Netflixy • نتفلكسي</a>
-          </blockquote>
+<body>
+    <div id="container">
+        <div class="video-container">
+            <video id="player" controls="" disableremoteplayback="">
+			<source type="video/mp4" src="blob:http://platform.topuphost.com:8558/e531544c-a644-489f-86f5-384ad6919707"></video>
+            <button id="fullscreen-button" style="display: none;">ملء الشاشة</button>
         </div>
-      </div>  
-    </div>
-  </div>
-
-  <div class="ui modal long scrolling" id="announcementModal">
-    <i class="close icon"></i>
-    <div class="header">
-      Annonces
-    </div>
-    <div class="image content">
-      <div class="description" dir="rtl" lang="ar" style="text-align: right; width: fit-content;"
-        id="announcementContainer">
-      </div>
-    </div>
-    <div class="actions">
-      <div class="ui positive right labeled icon button">
-        Fermer
-        <i class="checkmark icon"></i>
-      </div>
-    </div>
-  </div>
-
-  <div class="ui modal long scrolling" id="androidModal">
-    <i class="close icon"></i>
-    <div class="header">
-      Mon code Netflixy
-    </div>
-    <div class="image content">
-      <div class="description" dir="rtl" lang="ar" style="text-align: right;" id="androidContainer">
-        <div style="text-align: center;">
-          <o>Votre code</o>
-          <h1 id="codeContainer" style="margin-top: 0;"></h1>
+        <div id="channel-list" style="right: 0px;">
+            <ul id="channels">
+                <!-- Channels will be dynamically populated here -->
+            <li style="display: flex; align-items: center;"><img src="https://hr.ps/media/logo-01.png" alt="Logo"><span>الحرية الرياضية</span></li><li style="display: flex; align-items: center;"><img src="http://www.wbn.ps/assets/images/logo-h.png" alt="Logo"><span>حلا الرياضية </span></li><li style="display: flex; align-items: center;"><img src="http://www.wbn.ps/assets/images/logo-h.png" alt="Logo"><span>وتر الرياضية</span></li><li style="display: flex; align-items: center;"><img src="http://www.wbn.ps/assets/images/logo-h.png" alt="Logo"><span>وتر الرياضية 2</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 1 FHD</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 1</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 2</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 3</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 4</span></li><li style="display: flex; align-items: center;"><img src="https://tv.alfajertv.com/assets/images/logo.png" alt="Logo"><span>الفجر الجديد 5</span></li><li style="display: flex; align-items: center;"><img src="https://www.salam-tv.net/media/images/logo-bn.png" alt="Logo"><span>تلفزيون السلام</span></li><li style="display: flex; align-items: center;"><img src="https://kolalnastv.com/uploads/logo/logo_65563ec7390605-31141792.png" alt="Logo"><span>كل الناس</span></li><li style="display: flex; align-items: center;"><img src="https://hr.ps/media/logo-01.png" alt="Logo"><span>الحرية</span></li><li style="display: flex; align-items: center;"><img src="https://arn.ps/assets/images/logo_23.svg" alt="Logo"><span>اجيال</span></li><li style="display: flex; align-items: center;"><img src="https://www.raya.ps/assets/themes/default/assets/images/logo.png" alt="Logo"><span>راية 1</span></li><li style="display: flex; align-items: center;"><img src="https://www.raya.ps/assets/themes/default/assets/images/logo.png" alt="Logo"><span>راية 2</span></li><li style="display: flex; align-items: center;"><img src="https://www.raya.ps/assets/themes/default/assets/images/logo.png" alt="Logo"><span>راية 3</span></li><li style="display: flex; align-items: center;"><img src="https://i0.wp.com/www.pbc.ps/wp-content/uploads/2022/03/PALESTINE_BUMPER_LOGO.mov.00_00_05_28.Still001-e1646755719184.png?w=480&amp;ssl=1" alt="Logo"><span>فلسطين</span></li><li style="display: flex; align-items: center;"><img src="https://pnn.ps/assets/img/favicon/android-icon-192x192.png" alt="Logo"><span>فلسطين الاخبارية</span></li><li style="display: flex; align-items: center;"><img src="https://paltodaytv.com/style/assets/images/logo.png" alt="Logo"><span>فلسطين اليوم</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/Q0E4LLi.png" alt="Logo"><span>بلدنا</span></li><li style="display: flex; align-items: center;"><img src="https://www.maannews.net/2022_assets/images/logo.png" alt="Logo"><span>وكالة معا</span></li><li style="display: flex; align-items: center;"><img src="https://almadina.tv/wp-content/uploads/2021/07/logo-.png" alt="Logo"><span>تلفزيون المدينة</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/logo2021_ar.png" alt="Logo"><span>النجاح</span></li><li style="display: flex; align-items: center;"><img src="https://img.utdstc.com/icon/cf0/08a/cf008a1a110a8ee6da566f20cb906fa3253484c7933936358ff85a0545ef6f79:200" alt="Logo"><span>نابلس مباشر</span></li><li style="display: flex; align-items: center;"><img src="https://shababfm.ps/wp-content/uploads/2023/01/cropped-Panorama-for-television-press-and-media-Shabab-FM-1.png" alt="Logo"><span>نابلس شباب</span></li><li style="display: flex; align-items: center;"><img src="https://hayat.ps/wp-content/uploads/2020/12/HAYAT_Logo_2020-01.svg" alt="Logo"><span>حياة تي في</span></li><li style="display: flex; align-items: center;"><img src="https://hala-tv.com/images/hala_logo.png" alt="Logo"><span>هلا رام الله</span></li><li style="display: flex; align-items: center;"><img src="https://halalondontv.com/wp-content/uploads/2021/08/hala-london-logo-v1-1-e1725455699176.png" alt="Logo"><span>هلا لندن</span></li><li style="display: flex; align-items: center;"><img src="https://hala-tv.com/images/hala_logo.png" alt="Logo"><span>هلا تي في</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/makan.png" alt="Logo"><span>مكان</span></li><li style="display: flex; align-items: center;"><img src="https://www.rajeen.tv/logo.png" alt="Logo"><span>راجعين</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/awdeh.png" alt="Logo"><span>عودة</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/marah.png" alt="Logo"><span>مرح</span></li><li style="display: flex; align-items: center;"><img src="https://www.mawwal.ps/ar/wp-content/uploads/2015/01/download1.jpg" alt="Logo"><span>موال</span></li><li style="display: flex; align-items: center;"><img src="https://shahid.mbc.net/mediaObject/shahidlogo/light/Shahid_logo_light/original/Shahid_logo_light.png" alt="Logo"><span>Arab Got talend</span></li><li style="display: flex; align-items: center;"><img src="https://i.ibb.co/Jm01RkB/MBC-ZOOM.png" alt="Logo"><span>شاهد طرب</span></li><li style="display: flex; align-items: center;"><img src="https://arabica-tv.com/wp-content/uploads/2022/07/cropped-Arabica-tv-Logo-1.png" alt="Logo"><span>أرابيكا موسيقى</span></li><li style="display: flex; align-items: center;"><img src="https://www.skillshare.com/blog/_next/static/media/logo.14836b80.svg" alt="Logo"><span>اغاني كلاسيك 1</span></li><li style="display: flex; align-items: center;"><img src="https://www.skillshare.com/blog/_next/static/media/logo.14836b80.svg" alt="Logo"><span>اغاني كلاسيك 2</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/DkRA2lWzZIiFtm8.png" alt="Logo"><span>رؤيا مباشر</span></li><li style="display: flex; align-items: center;"><img src="https://etzaq6cywu6g.merlincdn.net/assets/com.ammantv.website/website/general/logo.png" alt="Logo"><span>عمّان</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن ارشيف</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن دراما</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن كوميدي</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن اغاني</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الاردن مطبخنا</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/dijlah.png" alt="Logo"><span>دجلة</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/UJqDWVB.png" alt="Logo"><span>دجلة طرب</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/f6PQzKd.png" alt="Logo"><span>الفرات</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/kG0d8Ay.png" alt="Logo"><span>الكويت 1</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/jg3VAxO.png" alt="Logo"><span>الكويت 2</span></li><li style="display: flex; align-items: center;"><img src="https://sat.tv/wp-content/themes/twentytwenty-child/data_lineups/nilesat/images1/ecl-256.png" alt="Logo"><span>القرين</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/jazeera.png" alt="Logo"><span>الجزيرة الاخبارية</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/aljazeera_mubasher.png" alt="Logo"><span>الجزيرة مباشر</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/alarabiya.jpg" alt="Logo"><span>العربية</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/rBixF3P.png" alt="Logo"><span>اليوم الاخبارية</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/EfKe3ae.png" alt="Logo"><span>DW العربية</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/syria_tv.jpg" alt="Logo"><span>سوريا</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/lana.png" alt="Logo"><span>لنا تي في</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/Shahid.png" alt="Logo"><span>شاهد باب الحارة</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/Shahid.png" alt="Logo"><span>شاهد مرايا</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc1.jpg" alt="Logo"><span>MBC 1</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/PVt8OPN.png" alt="Logo"><span>MBC 3</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc4.jpg" alt="Logo"><span>MBC 4</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc5.jpg" alt="Logo"><span>MBC 5</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc_drama.jpg" alt="Logo"><span>MBC دراما</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc_drama_plus.jpg" alt="Logo"><span>MBC دراما بلس</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc_iraq.jpg" alt="Logo"><span>MBC العراق</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc_masr.jpg" alt="Logo"><span>MBC مصر 1</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/mbc_masr2.jpg" alt="Logo"><span>MBC مصر 2</span></li><li style="display: flex; align-items: center;"><img src="https://2m.ma/_nuxt/img/shape.5ab0126.png" alt="Logo"><span>موندو</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/H5Oi2NS.png" alt="Logo"><span>اليمن شباب</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/8TzcJu5.png" alt="Logo"><span>اليمن اليوم</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/february_tv.jpg" alt="Logo"><span>فبراير</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/alaraby_tv.jpg" alt="Logo"><span>العربي</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/Gp5mNea.png" alt="Logo"><span>العربي 2</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/g7IRorO.jpeg" alt="Logo"><span>ابو ظبي</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/OT6DW3E.png" alt="Logo"><span>الامارات</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/TzOKMMy.png" alt="Logo"><span>ماجد</span></li><li style="display: flex; align-items: center;"><img src="https://spacetoon.com/assets/imgs/1stoon.png" alt="Logo"><span>سبيستون</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/oman_tv.jpg" alt="Logo"><span>عُمان تي في</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/alrayyan_tv.jpg" alt="Logo"><span>الريان</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/alrayyan_alqadeem.jpg" alt="Logo"><span>الريان القديم</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/qatartv.jpg" alt="Logo"><span>قطر تي في</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/qatartv-two.jpg" alt="Logo"><span>قطر 2</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/bahraintv.jpg" alt="Logo"><span>بحرين تي في</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/al_shariqah.jpg" alt="Logo"><span>الشارقة</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/alwousta.jpg" alt="Logo"><span>الوسطى</span></li><li style="display: flex; align-items: center;"><img src="https://quran-radio.com/assets/images/site/quran-radio-logo-h-rtl.png" alt="Logo"><span>القران الكريم</span></li><li style="display: flex; align-items: center;"><img src="https://aloula.faulio.com/storage/mediagallery/d3/41/fullhd_31890d483ad4fcf4b142406c9cfa1cb16ca0ddb6.png" alt="Logo"><span>مكة مباشر</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/makkahtv.jpg" alt="Logo"><span>مكة المكرمة</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/iqraa_tv.jpg" alt="Logo"><span>اقرا</span></li><li style="display: flex; align-items: center;"><img src="https://content.weyyak.com/207c8580-318d-ea11-831d-02d662556796/poster-image?c=189807&amp;d=200x200" alt="Logo"><span>وياك اكشن</span></li><li style="display: flex; align-items: center;"><img src="https://content.weyyak.com/d995517f-bc87-ea11-831d-02d662556796/poster-image?c=66628&amp;d=200x200" alt="Logo"><span>وياك دراما</span></li><li style="display: flex; align-items: center;"><img src="https://content.weyyak.com/bc777336-328d-ea11-831d-02d662556796/poster-image?c=67362&amp;d=200x200" alt="Logo"><span>وياك ميكس</span></li><li style="display: flex; align-items: center;"><img src="https://content.weyyak.com/d867c2e9-328d-ea11-831d-02d662556796/poster-image" alt="Logo"><span>وياك نواعم</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/rotana_cinema.jpg" alt="Logo"><span>روتانا سينما</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/rotana_hd.jpg" alt="Logo"><span>روتانا افلام</span></li><li style="display: flex; align-items: center;"><img src="http://platform.topuphost.com:8558/img/Shahid.png" alt="Logo"><span>شاهد افلام</span></li><li style="display: flex; align-items: center;"><img src="https://www.lyngsat.com/logo/tv/gg/grand-cinema.png" alt="Logo"><span>شاهد سينما</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/OaqEpwe.png" alt="Logo"><span>المستقبل</span></li><li style="display: flex; align-items: center;"><img src="https://i.imgur.com/6G6fxs5.png" alt="Logo"><span>المشهد</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/y2AB2KZz3UMXtyK.png" alt="Logo"><span>رؤيا مطبخ</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/TtFuZdW2broxc2b.png" alt="Logo"><span>رؤيا دراما</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/ZdjIM7D9nb9wyQh.png" alt="Logo"><span>رؤيا وطن على وتر</span></li><li style="display: flex; align-items: center;"><img src="https://roya.tv/_next/image?url=https%3A%2F%2Fbackend.roya-tv.com%2Fimagechanger%2FSize01Q40R927%2Fimages%2Fchannels%2Fy1sF76dlsIFhsPK.png&amp;w=64&amp;q=75" alt="Logo"><span>رؤيا مرايا</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/5Akaby168yQpPIs.png" alt="Logo"><span>رؤيا فلسطين</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/tLCS5pA4B8QgF5u.png" alt="Logo"><span>رؤيا انتاجات</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/AczwpsSQpQAzH16.png" alt="Logo"><span>رؤيا مغامرات</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/sTSnt78oZrqmUC6.png" alt="Logo"><span>رؤيا حلوة الدنيا</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/BlWIpv7bXTBu9DU.png" alt="Logo"><span>رؤيا طبخ ونفخ</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/vpePZ13WmkT1gUt.png" alt="Logo"><span>رؤيا زيست</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/xUxUesrlmWmoLXa.png" alt="Logo"><span>رؤيا شيف مان</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/i3HD9nf6Cv6CGz0.png" alt="Logo"><span>رؤيا ست النكهات</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/iGOv0WSHSgqsrDU.png" alt="Logo"><span>رؤيا جلطة</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/vRWIPpAST62wDJm.png" alt="Logo"><span>رؤيا مسرحيات</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/TNuo6lE3T7cAZxq.png" alt="Logo"><span>رؤيا ايمن زيدان</span></li><li style="display: flex; align-items: center;"><img src="https://backend.roya-tv.com/imagechanger/Size01Q40R927/images/channels/8jZkN8VHXz25RWR.png" alt="Logo"><span>رؤيا بيئة شامية</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>ام الكروم</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>ابو عواد</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>مقادير</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>تل الشومر</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>شمس الاغوار</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>بلا سيوف</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>رجوة</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>الخوالي</span></li><li style="display: flex; align-items: center;"><img src="https://www.jrtv.gov.jo/static/media/jrtv-logo-3.c1d0dd22.png" alt="Logo"><span>دنيا</span></li><li style="display: flex; align-items: center;"><img src="https://www.rtl.lu/assets/images/logo_rtl-letzebuerg_light.svg" alt="Logo"><span>تيلي لوزبيرغ</span></li><li style="display: flex; align-items: center;"><img src="https://www.france.tv/images/responsive/logos/channels/francetv-desktop.svg" alt="Logo"><span>فرنسا السابعة</span></li><li style="display: flex; align-items: center;"><img src="https://wwitv.com/tvlogos/b4103.jpg" alt="Logo"><span>ايطاليا السابعة</span></li><li style="display: flex; align-items: center;"><img src="https://o.kooora.com/f/big/py.png" alt="Logo"><span>باراجواي الاولى</span></li><li style="display: flex; align-items: center;"><img src="https://o.kooora.com/f/big/sk.png" alt="Logo"><span>سلوفاكيا تي في</span></li><li style="display: flex; align-items: center;"><img src="https://www.skillshare.com/blog/_next/static/media/logo.14836b80.svg" alt="Logo"><span>كلاسيك سيجريتو</span></li><li style="display: flex; align-items: center;"><img src="https://www.skillshare.com/blog/_next/static/media/logo.14836b80.svg" alt="Logo"><span>كلاسيك ارت</span></li><li style="display: flex; align-items: center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/TCM_2021.svg/512px-TCM_2021.svg.png" alt="Logo"><span>كلاسيك تورنر</span></li><li style="display: flex; align-items: center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/TCM_2021.svg/512px-TCM_2021.svg.png" alt="Logo"><span>كلاسيك تي في</span></li><li style="display: flex; align-items: center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/TCM_2021.svg/512px-TCM_2021.svg.png" alt="Logo"><span>كلاسيك دراما</span></li><li style="display: flex; align-items: center;"><img src="https://image.roku.com/developer_channels/prod/0975555abb1532f57341d5b324795907a6138cb11ad9a246cecafc03df0cf042.png" alt="Logo"><span>دانس الملوك</span></li><li style="display: flex; align-items: center;"><img src="https://www.skillshare.com/blog/_next/static/media/logo.14836b80.svg" alt="Logo"><span>دانس تيلي </span></li><li style="display: flex; align-items: center;"><img src="https://tntmusic.ru/static/img/logo@x2.png" alt="Logo"><span>دانس الثالثة</span></li><li style="display: flex; align-items: center;"><img src="https://collaboratemk.co.uk/wp-content/uploads/2022/08/popworld-logo-561beef6.png" alt="Logo"><span>دانس عالم بوب</span></li><li style="display: flex; align-items: center;"><img src="https://tv.minchev.eu/logos/now70.uk.png" alt="Logo"><span>Now 70's </span></li><li style="display: flex; align-items: center;"><img src="https://tv.minchev.eu/logos/now80.uk.png" alt="Logo"><span>Now 80's </span></li><li style="display: flex; align-items: center;"><img src="https://www.pngplay.com/wp-content/uploads/13/Aesthetic-Retro-Background-PNG-Image.png" alt="Logo"><span>TVS Vintage Network</span></li><li style="display: flex; align-items: center;"><img src="https://www.pngplay.com/wp-content/uploads/13/Aesthetic-Retro-Background-PNG-Image.png" alt="Logo"><span>بوب كوري</span></li><li style="display: flex; align-items: center;"><img src="https://www.samsung.com/us/smg/content/dam/s7/home/televisions-and-home-theater/tvs/tvplus/03232021/Loupe4K_190x190.png?raw=true" alt="Logo"><span>لووب فوركي</span></li><li style="display: flex; align-items: center;"><img src="https://worldscreen.com/tvreal/wp-content/uploads/sites/12/2021/11/2021-11-02-tvreal.png" alt="Logo"><span>حب الطبيعة</span></li><li style="display: flex; align-items: center;"><img src="https://sat.tv/wp-content/themes/twentytwenty-child/data_lineups/nilesat/images1/ecl-1061539.png" alt="Logo"><span>بانوراما فوود</span></li><li style="display: flex; align-items: center;"><img src="http://obsfullhd.tv:25461/images/5843c4e4a26a0293d706204fe4946e8a.png" alt="Logo"><span>سفرة</span></li><li style="display: flex; align-items: center;"><img src="https://i.pinimg.com/originals/8e/1c/f3/8e1cf3eceea32467cc1ef842902932d1.png" alt="Logo"><span>فتافيت</span></li><li style="display: flex; align-items: center;"><img src="https://aloula.faulio.com/storage/mediagallery/6b/68/fullhd_3d6f5c459718f2c1677f0fdcbc9d413285602b4e.png" alt="Logo"><span>ذكريات</span></li><li style="display: flex; align-items: center;"><img src="http://vod-logo.net/photos/8ad762f74f828aa26242975cc3f09b0c.png" alt="Logo"><span>ماسبيرو زمان</span></li></ul>
         </div>
-        <div class="ui header">شنوا نعمل بيه الكود نتفلكسي ؟</div>
-        <p>
-          الكود نتفلكسي متاعك يخليك تستعمل نتفلكسي على مختلف الأجهزة الأخرى كيما تليفونك.
-          <br>
-          بش تعرف كيفاش تصب نتفلكسي على أي جهاز آخر، يكفي تدخل <a href="https://netflixyapp.github.io/"
-            target="_blank">للرابط هذا !</a>
-        </p>
-        <br>
-        <div style="text-align: left;" dir="ltr">
-          <div class="ui header">A quoi sert mon code Netflixy ?</div>
-          <p>
-            Votre code vous permet d'utiliser Netflixy sur différents autres appareils tel que votre Smartphone.
-            <br>
-            Pour savoir comment installer Netflixy sur d'autres appareils, il suffit de consulter <a
-              href="https://netflixyapp.github.io/" target="_blank">ce lien !</a>
-          </p>
-        </div>
-      </div>
     </div>
-    <div class="actions">
-      <div class="ui positive right labeled icon button">
-        Fermer
-        <i class="checkmark icon"></i>
-      </div>
+    <button id="menu-toggle">القنوات</button>
+    <div id="visitor-count">
+      💗 إجمالي الزوار: <span id="total-visitors">426</span>
     </div>
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        var video = document.getElementById('player');
+        var channelList = document.getElementById('channel-list');
+        var menuToggle = document.getElementById('menu-toggle');
+        var fullscreenButton = document.getElementById('fullscreen-button');
+        var visitorCount = document.getElementById('total-visitors');
 
-  <script src="assets/js/facebook.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/jquery-3.6.0.min.js"></script>
-  <script src="assets/js/semantic.min.js"></script>
-  <script src="assets/js/dashboard.js"></script>
-  
-  <!-- Add your custom JavaScript here -->
-  <script>
-    // Function to handle button clicks
-    document.getElementById('accessNetflixBtn').addEventListener('click', function() {
-      window.location.href = 'https://www.netflix.com/?nftoken=BQAbAAEBEOO/oI0t9qD69j0L7wQXl92AoDR9pILEXhQXeJWsMsS+58/GHs57m576ofHMaM/uOvb2Vjs9K+0ErMEoGACwgkVEyIiT4uWXT8NnCY7YLIgQ5nmglTLNnnLrtJ+e45r/lyHzHVVKpLB5d1tUescAih/nHZ65Az6nB9grres9OybdI3DVvAGD1G0oyQMjUZj9L6hHhOShIc2dwsZiBPSEnoxMixzqVP2/cCm6WdWfY1yUTcQ=';
+        function parseM3U(m3uContent) {
+            var lines = m3uContent.split('\n');
+            var channels = [];
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith('#EXTINF')) {
+                    var logoMatch = lines[i].match(/tvg-logo="(.*?)"/);
+                    var nameMatch = lines[i].split(',')[1];
+                    var url = lines[i + 1].trim();
+
+                    channels.push({
+                        name: nameMatch,
+                        url: url,
+                        logo: logoMatch ? logoMatch[1] : null
+                    });
+                    i++;  // Skip the URL line as it's already used
+                }
+            }
+            return channels;
+        }
+
+        function populateChannelList(channels) {
+            var channelListUl = document.getElementById('channels');
+            channels.forEach(function(channel) {
+                var li = document.createElement('li');
+                li.style.display = "flex";
+                li.style.alignItems = "center";
+
+                if (channel.logo) {
+                    var img = document.createElement('img');
+                    img.src = channel.logo;
+                    img.alt = "Logo";
+                    li.appendChild(img);
+                }
+
+                var span = document.createElement('span');
+                span.textContent = channel.name;
+                li.appendChild(span);
+
+ li.addEventListener('click', function() {
+ // Remove 'selected' class from all items
+            document.querySelectorAll('#channels li').forEach(item => item.classList.remove('selected'));
+
+            // Add 'selected' class to the clicked item
+            li.classList.add('selected');
+    // Update the visitor count text with channel name and icon
+    var visitorText = document.getElementById('visitor-count');
+    visitorText.innerHTML = '';
+    
+    if (channel.logo) {
+        var channelImg = document.createElement('img');
+        channelImg.src = channel.logo;
+        channelImg.alt = "Channel Logo";
+        channelImg.style.width = '20px';
+        channelImg.style.height = '20px';
+        channelImg.style.marginRight = '10px'; // Correctly adds margin to the right of the icon
+        visitorText.appendChild(channelImg);
+    }
+
+    var channelName = document.createElement('span');
+    channelName.textContent = channel.name;
+    visitorText.appendChild(channelName);
+
+    // Load the channel URL into the video player
+  // Load the channel URL into the video player
+if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource(channel.url);
+    hls.attachMedia(video);
+
+   
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+        video.play();
     });
+} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = channel.url;
 
-    document.getElementById('accessAndroidBtn').addEventListener('click', function() {
-      window.location.href = 'https://www.youtube.com';
+   
+
+    video.addEventListener('loadedmetadata', function() {
+        video.play();
     });
-  </script>
-</body>
+}
 
-</html>
+    if (window.innerWidth < 768) {
+        channelList.style.right = '-250px';
+        fullscreenButton.style.display = 'block';
+    }
+});
+
+
+
+                channelListUl.appendChild(li);
+            });
+        }
+
+        function fetchM3UContent(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    var channels = parseM3U(data);
+                    populateChannelList(channels);
+
+                    // Play the first channel automatically
+                    if (channels.length > 0) {
+                        if (Hls.isSupported()) {
+                            var hls = new Hls();
+                            hls.loadSource(channels[0].url);
+                            hls.attachMedia(video);
+                            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                                video.play();
+                            });
+                        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                            video.src = channels[0].url;
+                            video.addEventListener('loadedmetadata', function() {
+                                video.play();
+                            });
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching M3U file:', error));
+        }
+
+        function updateVisitorCount() {
+          // Generate a random number for visitor count (you can adjust the range)
+    const randomVisitorCount = Math.floor(Math.random() * 1000); // Example: Random number between 0 and 999
+
+    // Set the random number as the visitor count
+    visitorCount.textContent = randomVisitorCount;
+        }
+
+        fetchM3UContent('tv.m3u'); // Replace with the path to your M3U file
+
+        fullscreenButton.addEventListener('click', function() {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        });
+
+        menuToggle.addEventListener('click', function() {
+            if (channelList.style.right === '0px') {
+                channelList.style.right = '-250px';
+                fullscreenButton.style.display = 'block';
+            } else {
+                channelList.style.right = '0px';
+                fullscreenButton.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                if (window.innerWidth < 768) {
+                    channelList.style.right = '-250px';
+                } else {
+                    channelList.style.right = '0px';
+                }
+            }, 300);
+        });
+
+        // Update visitor count on page load
+        updateVisitorCount();
+    </script>
+
+
+</body></html>
